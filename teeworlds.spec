@@ -33,7 +33,7 @@ The controls are heavily inspired by the FPS genre of computer games.
 
 %package        server
 Summary:        Server for %{name}
-Group:          Amusements/Games
+Group:          Games/Arcade
 Requires:       %{name}-data
 
 %description    server
@@ -41,7 +41,7 @@ Data for %{name}, an online multi-player platform 2D shooter.
 
 %package        data
 Summary:        Data-files for %{name}
-Group:          Amusements/Games
+Group:          Games/Arcade
 
 %description    data
 Data-files for %{name}, an online multi-player platform 2D shooter.
