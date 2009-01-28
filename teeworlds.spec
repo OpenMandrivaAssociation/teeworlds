@@ -23,6 +23,7 @@ BuildRequires:  zlib-devel
 BuildRequires:  libwavpack-devel
 BuildRequires:  pnglite-devel
 BuildRequires:  SDL-devel
+BuildRequires:  desktop-file-utils
 Requires:       %{name}-data
    
 %description
