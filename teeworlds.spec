@@ -79,7 +79,7 @@ install -p -m 0644 %{SOURCE1} \
         %{buildroot}%{_datadir}/pixmaps/%{name}.png
 
 desktop-file-install \
-     --dir=$RPM_BUILD_ROOT%{_desktopdir} \
+     --dir=$RPM_BUILD_ROOT%{_datadir}/applications \
      %{SOURCE2}
 
 %clean
