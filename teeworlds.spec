@@ -1,31 +1,30 @@
 Name:           teeworlds
 Version:        0.5.0
-Release:        5%{?dist}
+Release:        %mkrel 1
 Summary:        Online multi-player platform 2D shooter
 
-Group:          Amusements/Games
+Group:          Games/Arcade
 License:        Teeworlds
 URL:            http://www.teeworlds.com/
 Source0:        http://www.teeworlds.com/files/%{name}-%{version}-src.tar.gz
 Source1:        %{name}.png
 Source2:        %{name}.desktop
-Patch0:         %{name}-datadir.patch
-Patch1:         %{name}-extlibs.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Patch1:         %{name}-0.5.0-extlibs.patch
+Patch2:         %{name}-0.5.0-optflags.patch
+Patch3:         %{name}-0.5.0-segv.patch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
-# BuildRequires:  mesa-libGLU-devel
-# BuildRequires:  bam = 0.0.%{version}
+BuildRequires:  mesaglut-devel
+BuildRequires:  bam >= 0.2.0
 BuildRequires:  python-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  zlib-devel
-# BuildRequires:  libglfw-devel
-# BuildRequires:  wavpack-devel
-BuildRequires:  portaudio-devel
-# BuildRequires:  pnglite-devel
+BuildRequires:  libwavpack-devel
+BuildRequires:  pnglite-devel
+BuildRequires:  SDL-devel
 Requires:       %{name}-data
    
-
 %description
 The game features cartoon-themed graphics and physics, 
 and relies heavily on classic shooter weaponry and gameplay. 
@@ -36,7 +35,6 @@ Summary:        Server for %{name}
 Group:          Amusements/Games
 Requires:       %{name}-data
 
-
 %description    server
 Data for %{name}, an online multi-player platform 2D shooter. 
 
@@ -44,27 +42,23 @@ Data for %{name}, an online multi-player platform 2D shooter.
 Summary:        Data-files for %{name}
 Group:          Amusements/Games
 
-
 %description    data
 Data-files for %{name}, an online multi-player platform 2D shooter.
 
-
 %prep
 %setup -q -n %{name}-%{version}-src
+rm -rf src/engine/external
 
-#patch0 -p1 -b .datadir
-#patch1 -p1 -b .extlibs
-# rm -rf src/engine/external
+%patch1 -p1 -b .extlibs
+%patch2 -p1 -b .optflags
+%patch3 -p1 -b .segv
 
-iconv -f iso-8859-1 -t utf-8 readme.txt > readme.txt.utf8
-sed -i 's|\r$||g' readme.txt.utf8
+iconv -f iso-8859-1 -t utf-8 readme.txt |sed 's|\r||g' > readme.txt.utf8
 touch -c -r readme.txt readme.txt.utf8
 mv readme.txt.utf8 readme.txt
 
 %build
-# sed 's|-D__OPTFLAGS__|%{optflags}|' -i default.bam
-bam -v release
-
+CFLAGS="%{optflags}" bam -v release
 
 %install
 rm -rf %{buildroot}
@@ -83,18 +77,12 @@ cp -pr data/* \
 install -p -m 0644 %{SOURCE1} \
         %{buildroot}%{_datadir}/pixmaps/%{name}.png
 
-
 desktop-file-install \
-                     %if 0%{?rhel}
-                     --vendor="" \
-                     %endif
-                     --dir=$RPM_BUILD_ROOT%{_datadir}/applications \
-                     %{SOURCE2}
-
+     --dir=$RPM_BUILD_ROOT%{_desktopdir} \
+     %{SOURCE2}
 
 %clean
 rm -rf %{buildroot}
-
 
 %files
 %defattr(-,root,root,-)
@@ -103,15 +91,12 @@ rm -rf %{buildroot}
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/applications/%{name}.desktop
 
-
 %files data
 %defattr(-,root,root,-)
 %{_datadir}/%{name}/
-
 
 %files server
 %defattr(-,root,root,-)
 %doc readme.txt license.txt
 %{_bindir}/%{name}-srv
-
 
