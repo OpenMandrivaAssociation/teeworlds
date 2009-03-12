@@ -1,6 +1,6 @@
 Name:           teeworlds
 Version:        0.5.0
-Release:        %mkrel 1
+Release:        %mkrel 2
 Summary:        Online multi-player platform 2D shooter
 
 Group:          Games/Arcade
