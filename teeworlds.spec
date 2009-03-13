@@ -1,6 +1,6 @@
 Name:           teeworlds
-Version:        0.5.0
-Release:        %mkrel 2
+Version:        0.5.1
+Release:        %mkrel 1
 Summary:        Online multi-player platform 2D shooter
 
 Group:          Games/Arcade
@@ -11,7 +11,6 @@ Source1:        %{name}.png
 Source2:        %{name}.desktop
 Patch1:         %{name}-0.5.0-extlibs.patch
 Patch2:         %{name}-0.5.0-optflags.patch
-Patch3:         %{name}-0.5.0-segv.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires:  mesaglut-devel
@@ -52,7 +51,6 @@ rm -rf src/engine/external
 
 %patch1 -p1 -b .extlibs
 %patch2 -p1 -b .optflags
-%patch3 -p1 -b .segv
 
 iconv -f iso-8859-1 -t utf-8 readme.txt |sed 's|\r||g' > readme.txt.utf8
 touch -c -r readme.txt readme.txt.utf8
