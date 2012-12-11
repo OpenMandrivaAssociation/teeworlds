@@ -1,6 +1,6 @@
 Name:		teeworlds
 Version:	0.6.1
-Release:	%mkrel 1
+Release:	2
 Summary:	Online multi-player platform 2D shooter
 Group:		Games/Arcade
 License:	Teeworlds
@@ -9,15 +9,15 @@ Source0:	http://www.teeworlds.com/files/%{name}-%{version}-source.tar.gz
 Source1:	%{name}.png
 Source2:	%{name}.desktop
 Patch1:		%{name}-0.6.1-extlibs.patch
-BuildRequires:	SDL-devel
+BuildRequires:	pkgconfig(sdl)
 BuildRequires:	bam >= 0.4.0
 BuildRequires:	desktop-file-utils
-BuildRequires:	libwavpack-devel
-BuildRequires:	mesaglu-devel
+BuildRequires:	pkgconfig(wavpack)
+BuildRequires:	pkgconfig(glu)
 BuildRequires:	pnglite-devel
 BuildRequires:	python-devel
-BuildRequires:	zlib-devel
-BuildRequires:	freetype2-devel
+BuildRequires:	pkgconfig(zlib)
+BuildRequires:	pkgconfig(freetype2)
 Requires:	%{name}-data
 
 %description
@@ -44,47 +44,99 @@ Data-files for %{name}, an online multi-player platform 2D shooter.
 
 %prep
 %setup -q -n teeworlds-b177-r50edfd37-source
-%__rm -rf src/engine/external
+rm -rf src/engine/external
 
 %patch1 -p1 -b .extlibs
 
 iconv -f iso-8859-1 -t utf-8 readme.txt |sed 's|\r||g' > readme.txt.utf8
 touch -c -r readme.txt readme.txt.utf8
-%__mv readme.txt.utf8 readme.txt
+mv readme.txt.utf8 readme.txt
 
 %build
 CFLAGS="%{optflags}" bam -v release
 
 %install
-%__rm -rf %{buildroot}
-%__mkdir -p %{buildroot}%{_datadir}/%{name}/data
-%__mkdir -p %{buildroot}%{_datadir}/pixmaps
-%__install -D -m 0755 %{name} %{buildroot}%{_bindir}/%{name}
-%__install -D -m 0755 %{name}_srv %{buildroot}%{_bindir}/%{name}-srv
-%__cp -pr data/* %{buildroot}%{_datadir}/%{name}/data
-%__install -p -m 0644 %{SOURCE1} %{buildroot}%{_datadir}/pixmaps/%{name}.png
+mkdir -p %{buildroot}%{_datadir}/%{name}/data
+mkdir -p %{buildroot}%{_datadir}/pixmaps
+install -D -m 0755 %{name} %{buildroot}%{_bindir}/%{name}
+install -D -m 0755 %{name}_srv %{buildroot}%{_bindir}/%{name}-srv
+cp -pr data/* %{buildroot}%{_datadir}/%{name}/data
+install -p -m 0644 %{SOURCE1} %{buildroot}%{_datadir}/pixmaps/%{name}.png
 
 desktop-file-install \
      --dir=%{buildroot}%{_datadir}/applications \
      %{SOURCE2}
 
-%clean
-%__rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root,-)
 %doc readme.txt license.txt
 %{_bindir}/%{name}
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/applications/%{name}.desktop
 
 %files data
-%defattr(-,root,root,-)
 %{_datadir}/%{name}/
 
 %files server
-%defattr(-,root,root,-)
 %doc readme.txt license.txt
 %{_bindir}/%{name}-srv
 
+%changelog
+* Mon Jan 30 2012 Andrey Bondrov <abondrov@mandriva.org> 0.6.1-1
++ Revision: 769903
+- New version 0.6.1, update patches and BuildRequires
+
+  + Oden Eriksson <oeriksson@mandriva.com>
+    - the mass rebuild of 2010.1 packages
+
+* Mon Dec 21 2009 Samuel Verschelde <stormi@mandriva.org> 0.5.2-1mdv2010.1
++ Revision: 480956
+- new version 0.5.2
+- dropped 1 hunk from teeworlds-0.5.0-extlibs.patch (merged upstream)
+
+* Sun Sep 20 2009 Thierry Vignaud <tv@mandriva.org> 0.5.1-2mdv2010.0
++ Revision: 445414
+- rebuild
+
+* Fri Mar 13 2009 trem <trem@mandriva.org> 0.5.1-1mdv2009.1
++ Revision: 354739
+- update to 0.5.1
+- remove patch teeworlds-0.5.0-segv.patch (added upstream)
+
+* Thu Mar 12 2009 trem <trem@mandriva.org> 0.5.0-2mdv2009.1
++ Revision: 354358
++ rebuild (emptylog)
+
+* Wed Jan 28 2009 Olivier Thauvin <nanardon@mandriva.org> 0.5.0-1mdv2009.1
++ Revision: 334979
+- fix group
+- don't use jpackage macros
+- buildrequires
+- initial mdv release
+
+  + trem <trem@mandriva.org>
+    - import teeworlds
+
+
+* Fri Jan 02 2009 Simon Wesp <cassmodiah@fedoraproject.org> 0.4.3-5
+- Remove requires from subpackage 'data'
+- Correct description 
+
+* Thu Jan 01 2009 Simon Wesp <cassmodiah@fedoraproject.org> 0.4.3-4
+- Drop desktop-file and icon for subpackage 'server'
+- Honor timestamp for converted file
+- Add and correct Lubomir's changes
+- Remove all comments
+- Correct License-Tag (again)
+- Add datadir patch
+
+* Wed Dec 31 2008 Lubomir Rintel <lkundrak@v3.sk> 0.4.3-3
+- Outsource the dependencies (extlib-patch)
+- Use optflags
+
+* Thu Sep 18 2008 Simon Wesp <cassmodiah@fedoraproject.org> 0.4.3-2
+- Recheck and conform licensing and list it in a comment
+- Correct BuildRequires
+
+* Sat Sep 13 2008 Simon Wesp <cassmodiah@fedoraproject.org> 0.4.3-1
+- Initial Release
 
