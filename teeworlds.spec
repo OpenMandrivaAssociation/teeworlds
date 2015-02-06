@@ -1,6 +1,6 @@
 Name:		teeworlds
 Version:	0.6.1
-Release:	2
+Release:	3
 Summary:	Online multi-player platform 2D shooter
 Group:		Games/Arcade
 License:	Teeworlds
