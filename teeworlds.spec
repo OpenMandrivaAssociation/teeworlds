@@ -4,7 +4,7 @@ Release:	3
 Summary:	Online multi-player platform 2D shooter
 Group:		Games/Arcade
 License:	Teeworlds
-URL:		http://www.teeworlds.com/
+URL:		https://www.teeworlds.com/
 Source0:	http://www.teeworlds.com/files/%{name}-%{version}-source.tar.gz
 Source1:	%{name}.png
 Source2:	%{name}.desktop
